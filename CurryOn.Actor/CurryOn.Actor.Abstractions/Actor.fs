@@ -4,13 +4,6 @@ open CurryOn
 open System
 open System.Threading
 
-type IMessage<'message> =
-    abstract member Id: Guid
-    abstract member Sender: ActorLocation
-    abstract member ReplyTo: ActorLocation
-    abstract member Timestamp: DateTimeOffset
-    abstract member Body: 'message
-
 type ActorError<'e> =
 | MailboxError of MailboxError
 | ActorLogicError of 'e

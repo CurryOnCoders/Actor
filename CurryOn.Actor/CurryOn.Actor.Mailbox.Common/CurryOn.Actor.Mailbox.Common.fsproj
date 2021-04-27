@@ -6,17 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Core.fs" />
-    <Compile Include="Location.fs" />
-    <Compile Include="Mailbox.fs" />
-    <Compile Include="Dispatch.fs" />
-    <Compile Include="Actor.fs" />
-    <Compile Include="System.fs" />
-    <Compile Include="Manifest.fs" />
+    <Compile Include="Shared.fs" />
+    <Compile Include="InMemory.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CurryOn.Common" Version="0.1.2-prerelease" />
+    <ProjectReference Include="..\CurryOn.Actor.Abstractions\CurryOn.Actor.Abstractions.fsproj" />
   </ItemGroup>
 
   <ItemGroup>

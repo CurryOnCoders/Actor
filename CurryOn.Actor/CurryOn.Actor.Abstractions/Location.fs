@@ -21,6 +21,8 @@ type ActorHostAlias = private ActorHostAlias of string
 type ActorSystemName = private ActorSystemName of string
 
 type ActorLocation =
+| NoActor
+| CurrentActor
 | LocateByName of ActorName
 | LocateByAddress of Address
 
