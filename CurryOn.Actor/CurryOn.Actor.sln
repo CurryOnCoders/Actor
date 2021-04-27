@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CurryOn.Actor.Abstractions", "CurryOn.Actor.Abstractions\CurryOn.Actor.Abstractions.fsproj", "{35359196-2A23-486A-ADE0-560427EE1BA5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{35359196-2A23-486A-ADE0-560427EE1BA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35359196-2A23-486A-ADE0-560427EE1BA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35359196-2A23-486A-ADE0-560427EE1BA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35359196-2A23-486A-ADE0-560427EE1BA5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D29BD1D4-6174-47E8-85DE-53DEC8CB3F11}
+	EndGlobalSection
+EndGlobal
