@@ -2,6 +2,7 @@
 
 open CurryOn
 open CurryOn.Actor
+open CurryOn.Tasks
 open System.Collections.Concurrent
 open System.Threading.Tasks
 
@@ -13,7 +14,7 @@ module InMemory =
         let enqueued = event.Publish
         {new IMailbox<'message> with
             member __.Send message = 
-                asyncResult {
+                taskResult {
                     queue.Enqueue(message)
                     let receipt = DeliveryReceipt.ofMessage message
                     event.Trigger(message)
@@ -21,7 +22,7 @@ module InMemory =
                 }
             member __.Receive cancellation =
                 let rec dequeue () =
-                    asyncResult {
+                    async {
                         match queue.TryDequeue() with
                         | (true, message) ->
                             return Some message
@@ -43,7 +44,7 @@ module InMemory =
                                 else
                                     return! dequeue ()
                     }
-                asyncResult {
+                taskResult {
                     let! message = dequeue()
                     match message with
                     | Some message ->
@@ -84,7 +85,7 @@ module InMemory =
 
         {new IMailbox<'message> with
             member __.Send message = 
-                asyncResult {
+                taskResult {
                     let priority = getPriority message.Body
                     queues.AddOrUpdate(priority, (fun _ -> newQueue message), (fun _ queue -> queue |> updateQueue message)) |> ignore
                     let receipt = DeliveryReceipt.ofMessage message
@@ -93,7 +94,7 @@ module InMemory =
                 }
             member __.Receive cancellation =
                 let rec dequeue () =
-                    asyncResult {
+                    async {
                         match getNextQueuedMessage() with
                         | Some message ->
                             return Some message
@@ -115,7 +116,7 @@ module InMemory =
                                 else
                                     return! dequeue ()
                     }
-                asyncResult {
+                taskResult {
                     let! message = dequeue()
                     match message with
                     | Some message ->

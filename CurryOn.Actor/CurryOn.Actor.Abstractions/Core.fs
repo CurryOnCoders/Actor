@@ -6,6 +6,7 @@ type ActorSystemError =
 | AlreadyInUse of string
 | InvalidSystemName of string
 | ConfigurationError of string
+| DeserializationError of string
 | UnexpectedSystemError of exn
 
 [<AutoOpen>]

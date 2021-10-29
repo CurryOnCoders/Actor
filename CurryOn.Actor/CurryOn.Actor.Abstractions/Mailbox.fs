@@ -1,6 +1,7 @@
 ﻿namespace CurryOn.Actor
 
 open CurryOn
+open CurryOn.Tasks
 open System
 open System.Threading
 
@@ -22,10 +23,10 @@ type IDeliveryReceipt =
     abstract member Timestamp: DateTimeOffset
 
 type IOutboundMailbox<'message> =
-    abstract member Send : IMessage<'message> -> AsyncResult<IDeliveryReceipt, MailboxError>
+    abstract member Send : IMessage<'message> -> TaskResult<IDeliveryReceipt, MailboxError>
 
 type IInboundMailbox<'message> =
-    abstract member Receive : CancellationToken option -> AsyncResult<IMessage<'message>, MailboxError>
+    abstract member Receive : CancellationToken option -> TaskResult<IMessage<'message>, MailboxError>
 
 type IMailbox<'message> =
     inherit IOutboundMailbox<'message>
