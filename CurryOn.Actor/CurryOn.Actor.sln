@@ -11,6 +11,11 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CurryOn.Actor.Mailbox.Rabbi
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CurryOn.Actor.Serialization", "CurryOn.Actor.Serialization\CurryOn.Actor.Serialization.fsproj", "{227CFE5B-949D-48FD-B020-96E34C7627DF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{4B02BAFE-5155-4E46-9854-5B28D04CDC46}"
+	ProjectSection(SolutionItems) = preProject
+		..\scripts\MovePackages.fsx = ..\scripts\MovePackages.fsx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

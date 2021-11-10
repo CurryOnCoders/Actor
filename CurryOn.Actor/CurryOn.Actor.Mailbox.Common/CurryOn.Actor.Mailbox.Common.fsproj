@@ -3,6 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.1.0</Version>
+    <Authors>Eshbach, Aaron</Authors>
+    <Company>CurryOn</Company>
+    <Description>Shared artifcats for creating an implementation of IMailbox in CurryOn.Actor.Abstractions</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageTags>mailbox actor fsharp</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +27,13 @@
 
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
