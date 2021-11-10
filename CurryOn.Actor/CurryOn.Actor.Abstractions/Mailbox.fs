@@ -1,14 +1,15 @@
 ﻿namespace CurryOn.Actor
 
-open CurryOn
 open CurryOn.Tasks
 open System
 open System.Threading
+open System.Threading.Tasks
 
 type MailboxError =
-| CoummunicationError of string
+| CommunicationError of string
 | MailboxFullError
 | MailboxTimeout of string
+| SystemError of ActorSystemError
 | UnexpectedMailboxError of exn
 
 type IMessage<'message> =
@@ -26,7 +27,8 @@ type IOutboundMailbox<'message> =
     abstract member Send : IMessage<'message> -> TaskResult<IDeliveryReceipt, MailboxError>
 
 type IInboundMailbox<'message> =
-    abstract member Receive : CancellationToken option -> TaskResult<IMessage<'message>, MailboxError>
+    abstract member Receive : unit -> TaskResult<IMessage<'message> option, MailboxError>
+    abstract member Subscribe : (IMessage<'message> -> Task) -> Task<IDisposable>
 
 type IMailbox<'message> =
     inherit IOutboundMailbox<'message>
@@ -42,7 +44,8 @@ module Mailbox =
     let fromInboundOutbound<'message> (inboundMailbox: IInboundMailbox<'message>) (outboundMailbox: IOutboundMailbox<'message>) =
         {new IMailbox<'message> with
             member __.Send message = outboundMailbox.Send message
-            member __.Receive cancellation = inboundMailbox.Receive cancellation
+            member __.Receive () = inboundMailbox.Receive ()
+            member __.Subscribe f = inboundMailbox.Subscribe f
         }
 
 type MailboxMessage<'message> =

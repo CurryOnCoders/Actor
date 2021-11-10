@@ -1,14 +1,10 @@
 ﻿namespace CurryOn.Actor.Mailbox.RabbitMq
 
+open CurryOn.RabbitMq
 open System
 
 type IRabbitMqMailboxConfiguration =
-    abstract member Hosts: string []
-    abstract member Port: int
-    abstract member UserName: string
-    abstract member Password: string
-    abstract member PrefetchCount: int option
-    abstract member VirtualHost: string
+    inherit IRabbitMqConfiguration
     abstract member RootExchange: string
 
 [<CLIMutable>]

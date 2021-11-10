@@ -20,37 +20,29 @@ module InMemory =
                     event.Trigger(message)
                     return receipt :> IDeliveryReceipt
                 }
-            member __.Receive cancellation =
-                let rec dequeue () =
+            member __.Receive () =
+                taskResult {
+                    return
+                        match queue.TryDequeue() with
+                        | (true, message) ->
+                            Some message
+                        | (false, _) ->
+                            None
+                }
+            member __.Subscribe f =
+                let rec processAllInQueue () =
                     async {
                         match queue.TryDequeue() with
                         | (true, message) ->
-                            return Some message
+                            do! f message |> Async.AwaitTask
+                            return! processAllInQueue ()
                         | (false, _) ->
-                            match cancellation with
-                            | Some token when not token.IsCancellationRequested ->
-                                return! dequeue ()
-                            | _ ->
-                                let tasks = 
-                                    [
-                                        Async.AwaitEvent enqueued |> Async.Ignore
-                                        Async.Sleep 500
-                                    ] |> List.map Async.StartAsTask
-
-                                do! Task.WhenAny(tasks) |> Async.AwaitTask |> Async.Ignore
-                                
-                                if cancellation |> Option.map (fun c -> c.IsCancellationRequested) |> Option.defaultValue false then
-                                    return None
-                                else
-                                    return! dequeue ()
+                            return ()
                     }
-                taskResult {
-                    let! message = dequeue()
-                    match message with
-                    | Some message ->
-                        return message
-                    | None ->
-                        return! Error <| MailboxTimeout "Receive was cancelled before a message became available"
+                task {
+                    do! processAllInQueue () |> Async.StartAsTask              
+                    let observer = enqueued |> Observable.subscribe (ignore >> processAllInQueue >> Async.RunSynchronously)
+                    return observer
                 }
         }
 
@@ -92,36 +84,24 @@ module InMemory =
                     event.Trigger(message)
                     return receipt :> IDeliveryReceipt
                 }
-            member __.Receive cancellation =
-                let rec dequeue () =
+            member __.Receive () =
+                taskResult {
+                    return getNextQueuedMessage ()
+                }
+            member __.Subscribe f =
+                let rec processAllInQueue () =
                     async {
                         match getNextQueuedMessage() with
                         | Some message ->
-                            return Some message
+                            do! f message |> Async.AwaitTask
+                            return! processAllInQueue ()
                         | None ->
-                            match cancellation with
-                            | Some token when not token.IsCancellationRequested ->
-                                return! dequeue ()
-                            | _ ->
-                                let tasks = 
-                                    [
-                                        Async.AwaitEvent enqueued |> Async.Ignore
-                                        Async.Sleep 500
-                                    ] |> List.map Async.StartAsTask
-
-                                do! Task.WhenAny(tasks) |> Async.AwaitTask |> Async.Ignore
-                                
-                                if cancellation |> Option.map (fun c -> c.IsCancellationRequested) |> Option.defaultValue false then
-                                    return None
-                                else
-                                    return! dequeue ()
+                            return ()
                     }
-                taskResult {
-                    let! message = dequeue()
-                    match message with
-                    | Some message ->
-                        return message
-                    | None ->
-                        return! Error <| MailboxTimeout "Receive was cancelled before a message became available"
+
+                task {
+                    do! processAllInQueue () |> Async.StartAsTask                
+                    let observer = enqueued |> Observable.subscribe (ignore >> processAllInQueue >> Async.RunSynchronously)
+                    return observer
                 }
         }
